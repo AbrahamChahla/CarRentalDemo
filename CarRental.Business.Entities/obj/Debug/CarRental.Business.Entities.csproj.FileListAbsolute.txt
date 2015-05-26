@@ -1,0 +1,9 @@
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\obj\Debug\CarRental.Business.Entities.csprojResolveAssemblyReference.cache
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\bin\Debug\CarRental.Business.Entities.dll
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\bin\Debug\CarRental.Business.Entities.pdb
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\obj\Debug\CarRental.Business.Entities.dll
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\obj\Debug\CarRental.Business.Entities.pdb
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\bin\Debug\Core.Common.Contracts.dll
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\bin\Debug\Core.Common.dll
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\bin\Debug\Core.Common.Contracts.pdb
+C:\Developer\gitroot\CarRental\CarRental.Business.Entities\bin\Debug\Core.Common.pdb

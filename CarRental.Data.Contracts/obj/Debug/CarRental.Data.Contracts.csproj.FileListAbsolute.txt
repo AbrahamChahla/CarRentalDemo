@@ -1,0 +1,4 @@
+C:\Developer\gitroot\CarRental\CarRental.Data.Contracts\bin\Debug\CarRental.Data.Contracts.dll
+C:\Developer\gitroot\CarRental\CarRental.Data.Contracts\bin\Debug\CarRental.Data.Contracts.pdb
+C:\Developer\gitroot\CarRental\CarRental.Data.Contracts\obj\Debug\CarRental.Data.Contracts.dll
+C:\Developer\gitroot\CarRental\CarRental.Data.Contracts\obj\Debug\CarRental.Data.Contracts.pdb
