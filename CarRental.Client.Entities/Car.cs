@@ -4,31 +4,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace CarRental.Client.Entities
 {
     public class Car : ObjectBase
     {
-        private int _CardId;
+        #region Properties
+        private int _CarId;
         private string _Description;
         private string _Color;
         private int _Year;
         private decimal _RentalPrice;
         private bool _CurrentlyRented;
 
-        public int CardId
+        public int CarId
         {
             get
             {
-                return _CardId;
+                return _CarId;
             }
             set
             {
-                if (_CardId != value)
+                if (_CarId != value)
                 {
-                    _CardId = value;
+                    _CarId = value;
 
-                    OnPropertyChanged(() => CardId);
+                    OnPropertyChanged(() => CarId);
                 }
             }
         }
@@ -101,6 +103,22 @@ namespace CarRental.Client.Entities
             }
         }
 
+        #endregion
 
+
+        class CardValidator : AbstractValidator<Car>
+        {
+            public CardValidator()
+            {
+                RuleFor(val => val.Description).NotEmpty();
+                RuleFor(val => val.Color).NotEmpty();
+                RuleFor(val => val.RentalPrice).GreaterThan(0);
+                RuleFor(val => val.Year).GreaterThan(2000).LessThanOrEqualTo(DateTime.Now.Year);
+            }
+        }
+        protected override IValidator GetValidator()
+        {
+            return new CarValidator();
+        }
     }
 }
