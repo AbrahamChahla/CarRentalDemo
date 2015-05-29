@@ -1,62 +1,125 @@
-﻿using Core.Common.Utils;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
+using Core.Common.Contracts;
 using Core.Common.Extensions;
+using Core.Common.Utils;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Core.Common.Core
 {
-    public class ObjectBase : INotifyPropertyChanged
+    public abstract class ObjectBase : NotificationObject, IDirtyCapable, IExtensibleDataObject
     {
-        private event PropertyChangedEventHandler _PropertyChanged;
-        List<PropertyChangedEventHandler> _PropertyChangedSubscribers = new List<PropertyChangedEventHandler>();
-
-        public event PropertyChangedEventHandler PropertyChanged
+        public ObjectBase()
         {
-            add
-            {
-                if (!_PropertyChangedSubscribers.Contains(value))
-                {
-                    _PropertyChanged += value;
-                    _PropertyChangedSubscribers.Add(value);
-                }
-            }
-
-            remove
-            {
-                _PropertyChanged -= value;
-                _PropertyChangedSubscribers.Remove(value);
-            }
+            _Validator = GetValidator();
+            Validate();
         }
 
+        protected bool _IsDirty = false;
+        protected IValidator _Validator = null;
+
+        protected IEnumerable<ValidationFailure> _ValidationErrors = null;
+        public static CompositionContainer Container { get; set; }
+
+        #region IExtensibleDataObject Members
+        public ExtensionDataObject ExtensionData { get; set; }
+        #endregion
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            OnPropertyChanged(propertyName, true);
+        }
         protected virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
         {
             string propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
             OnPropertyChanged(propertyName);
         }
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(propertyName, true);
-        }
         protected virtual void OnPropertyChanged(string propertyName, bool makeDirty)
         {
-            if (_PropertyChanged != null)
-            {
-                _PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            base.OnPropertyChanged(propertyName);
             if (makeDirty)
             {
-                _IsDirty = true;
+                IsDirty = true;
+            }
+            Validate();
+        }
+
+        public virtual IValidator GetValidator()
+        {
+            return null;
+        }
+        [NotNavigable]
+        public IEnumerable<ValidationFailure> ValidationErrors
+        {
+            get
+            {
+                return _ValidationErrors;
+            }
+            set
+            {
+
+            }
+        }
+        public void Validate()
+        {
+            if (_Validator != null)
+            {
+                ValidationResult results = _Validator.Validate(this);
+                _ValidationErrors = results.Errors;
+            }
+        }
+        [NotNavigable]
+        public virtual bool IsValid
+        {
+            get
+            {
+                if (_ValidationErrors != null && _ValidationErrors.Count() > 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+        }
+
+        string IDataErrorInfo.Error
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+        string IDataErrorInfo.this[string columName]
+        {
+            get
+            {
+                StringBuilder errors = new StringBuilder();
+                if (_ValidationErrors != null && _ValidationErrors.Count() > 0)
+                {
+                    foreach (ValidationFailure validationError in _ValidationErrors)
+                    {
+                        if (validationError.PropertyName == columName)
+                        {
+                            errors.AppendLine(validationError.ErrorMessage);
+                        }
+                    }
+                }
+                return errors.ToString();
             }
         }
 
-        bool _IsDirty;
         [NotNavigable]
         public bool IsDirty
         {
@@ -69,7 +132,6 @@ namespace Core.Common.Core
                 _IsDirty = value;
             }
         }
-
         public List<ObjectBase> GetDirtyObjects()
         {
             List<ObjectBase> dirtyObjects = new List<ObjectBase>();
@@ -84,8 +146,6 @@ namespace Core.Common.Core
 
             return dirtyObjects;
         }
-
-
         public void CleanAll()
         {
 
@@ -98,7 +158,6 @@ namespace Core.Common.Core
                 return false;
             }, coll => { });
         }
-
         public virtual bool IsAnythingDirty()
         {
             bool IsDirty = false;
@@ -118,9 +177,6 @@ namespace Core.Common.Core
             }, coll => { });
             return IsDirty;
         }
-
-
-
         protected void WalObjectGraph(Func<ObjectBase, bool> snippetForObject, Action<IList> snippetForCollection, params string[] exemptProperties)
         {
             List<ObjectBase> visited = new List<ObjectBase>();
@@ -174,6 +230,10 @@ namespace Core.Common.Core
             walk(this);
 
         }
+
+
+
+
 
     }
 }
