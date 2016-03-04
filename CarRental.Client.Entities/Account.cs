@@ -24,7 +24,7 @@ namespace CarRental.Client.Entities
         }
         private string _LoginEmail;
 
-        public string MyProperty
+        public string LoginEmail
         {
             get { return _LoginEmail; }
             set

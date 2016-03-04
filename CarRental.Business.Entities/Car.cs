@@ -13,7 +13,7 @@ namespace CarRental.Business.Entities
     public class Car : EntityBase, IIdentifiableEntity
     {
         [DataMember]
-        public int CardId { get; set; }
+        public int CarId { get; set; }
         [DataMember]
         public string Description { get; set; }
         [DataMember]
@@ -29,11 +29,11 @@ namespace CarRental.Business.Entities
         {
             get
             {
-                return CardId;
+                return CarId;
             }
             set
             {
-                CardId = value;
+                CarId = value;
             }
         }
     }
