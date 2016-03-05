@@ -23,129 +23,52 @@ namespace Core.Common.Core
             _Validator = GetValidator();
             Validate();
         }
-        #region Properties
-
-        protected IEnumerable<ValidationFailure> _ValidationErrors = null;
-        protected IValidator _Validator = null;
 
         protected bool _IsDirty = false;
+        protected IValidator _Validator = null;
 
-        [NotNavigable]
-        public virtual bool IsValid
-        {
-            get
-            {
-                if (_ValidationErrors != null && _ValidationErrors.Any())
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-
-        }
-
+        protected IEnumerable<ValidationFailure> _ValidationErrors = null;
 
         public static CompositionContainer Container { get; set; }
 
-        [NotNavigable]
-        public IEnumerable<ValidationFailure> ValidationErrors
-        {
-            get
-            {
-                return _ValidationErrors;
-            }
-            set
-            {
 
-            }
-        }
-
-
-        string IDataErrorInfo.Error
-        {
-            get { return string.Empty; }
-        }
-        string IDataErrorInfo.this[string columName]
-        {
-            get
-            {
-                StringBuilder errors = new StringBuilder();
-                if (_ValidationErrors != null && _ValidationErrors.Any())
-                {
-                    foreach (ValidationFailure validationError in _ValidationErrors)
-                    {
-                        if (validationError.PropertyName == columName)
-                        {
-                            errors.AppendLine(validationError.ErrorMessage);
-                        }
-                    }
-                }
-                return errors.ToString();
-            }
-        }
-        [NotNavigable]
-        public bool IsDirty
-        {
-            get
-            {
-                return _IsDirty;
-            }
-            set
-            {
-                _IsDirty = value;
-            }
-        }
-        #endregion
-
+        
         #region IExtensibleDataObject Members
         public ExtensionDataObject ExtensionData { get; set; }
         #endregion
-        #region Methods
-        public virtual IValidator GetValidator()
-        {
-            return null;
-        }
 
+        #region IDirtyCapable members
 
-        public void Validate()
+        [NotNavigable]
+        public virtual bool IsDirty
         {
-            if (_Validator != null)
+            get { return _IsDirty; }
+            protected set
             {
-                ValidationResult results = _Validator.Validate(this);
-                _ValidationErrors = results.Errors;
+                _IsDirty = value;
+                OnPropertyChanged("IsDirty", false);
             }
         }
 
+        public virtual bool IsAnythingDirty()
+        {
+            bool IsDirty = false;
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(propertyName, true);
-        }
-       
-        protected virtual void OnPropertyChanged(string propertyName, bool makeDirty)
-        {
-            OnPropertyChanged(propertyName);
-            if (makeDirty)
+            WalkObjectGraph(o =>
             {
-                IsDirty = true;
-            }
-            Validate();
-        }
-        protected virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
-        {
-            string propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
-            OnPropertyChanged(propertyName);
-            
-        }
-        protected virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression, bool makeDirty)
-        {
-            OnPropertyChanged(propertyExpression);
+                if (o.IsDirty)
+                {
+                    IsDirty = true;
+                    return true; //short circuit
+                }
+                else
+                {
+                    return false;
 
+                }
+            }, coll => { });
+            return IsDirty;
         }
-
         public List<ObjectBase> GetDirtyObjects()
         {
             List<ObjectBase> dirtyObjects = new List<ObjectBase>();
@@ -160,6 +83,9 @@ namespace Core.Common.Core
 
             return dirtyObjects;
         }
+        /// <summary>
+        /// Walks the object graph cleaning any dirty object.
+        /// </summary>
         public void CleanAll()
         {
 
@@ -172,26 +98,34 @@ namespace Core.Common.Core
                 return false;
             }, coll => { });
         }
-        public virtual bool IsAnythingDirty()
+
+        #endregion
+        
+        #region Property change notification
+        protected override void OnPropertyChanged(string propertyName)
         {
-            bool IsDirty = false;
+            OnPropertyChanged(propertyName, true);
+        }
+        protected void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression, bool makeDirty)
+        {
+            string propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
+            OnPropertyChanged(propertyName, makeDirty);
 
-            WalkObjectGraph(o =>
+        }
+        protected void OnPropertyChanged(string propertyName, bool makeDirty)
+        {
+            base.OnPropertyChanged(propertyName);
+            if (makeDirty)
             {
-                if (o.IsDirty)
-                {
-                    IsDirty = true;
-                    return true;
-                }
-                else
-                {
-                    return false;
-
-                }
-            }, coll => { });
-            return IsDirty;
+                IsDirty = true;
+            }
+            Validate();
         }
 
+
+        #endregion
+        
+        #region Protected methods
         /// <summary>
         /// Method that walk throught an object and check if is dirty.
         /// </summary>
@@ -253,10 +187,85 @@ namespace Core.Common.Core
 
         }
 
+
         #endregion
 
+        #region Validation
+
+        public virtual IValidator GetValidator()
+        {
+            return null;
+        }
+
+        [NotNavigable]
+        public IEnumerable<ValidationFailure> ValidationErrors
+        {
+            get
+            {
+                return _ValidationErrors;
+            }
+            set
+            {
+
+            }
+        }
 
 
+        public void Validate()
+        {
+            if (_Validator != null)
+            {
+                ValidationResult results = _Validator.Validate(this);
+                _ValidationErrors = results.Errors;
+            }
+        }
+
+        [NotNavigable]
+        public virtual bool IsValid
+        {
+            get
+            {
+                if (_ValidationErrors != null && _ValidationErrors.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+        }
+
+
+        #endregion
+
+        #region  IDataErrorInfo members
+        string IDataErrorInfo.Error
+        {
+            get { return string.Empty; }
+        }
+        string IDataErrorInfo.this[string columName]
+        {
+            get
+            {
+                StringBuilder errors = new StringBuilder();
+                if (_ValidationErrors != null && _ValidationErrors.Any())
+                {
+                    foreach (ValidationFailure validationError in _ValidationErrors)
+                    {
+                        if (validationError.PropertyName == columName)
+                        {
+                            errors.AppendLine(validationError.ErrorMessage);
+                        }
+                    }
+                }
+                return errors.ToString();
+            }
+        }
+
+
+        #endregion
 
     }
 }
