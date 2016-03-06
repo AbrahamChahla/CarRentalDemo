@@ -69,9 +69,11 @@ namespace Core.Common.Core
             }, coll => { });
             return IsDirty;
         }
-        public List<ObjectBase> GetDirtyObjects()
+        public List<IDirtyCapable> GetDirtyObjects()
         {
-            List<ObjectBase> dirtyObjects = new List<ObjectBase>();
+            List<IDirtyCapable> dirtyObjects = new List<IDirtyCapable>();
+
+
             WalkObjectGraph(o =>
             {
                 if (o.IsDirty)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Core.Common.Core;
 using FluentValidation;
 
-namespace Core.Common.Tests.Test_Classes
+namespace Core.Common.Tests
 {
     internal class TestClass : ObjectBase
     {

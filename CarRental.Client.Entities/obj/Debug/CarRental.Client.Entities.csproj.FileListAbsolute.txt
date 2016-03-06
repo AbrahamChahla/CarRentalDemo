@@ -48,3 +48,5 @@ C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Client.Entities\bin\Debug\pt
 C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Client.Entities\bin\Debug\ru\FluentValidation.resources.dll
 C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Client.Entities\bin\Debug\sv\FluentValidation.resources.dll
 C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Client.Entities\bin\Debug\tr\FluentValidation.resources.dll
+C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Client.Entities\bin\Debug\EntityFramework.dll
+C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Client.Entities\bin\Debug\EntityFramework.xml

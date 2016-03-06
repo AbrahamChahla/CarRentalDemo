@@ -27,3 +27,5 @@ C:\Developer\2015\CarRental\CarRentalDemo\Core.Common\bin\Debug\pt\FluentValidat
 C:\Developer\2015\CarRental\CarRentalDemo\Core.Common\bin\Debug\ru\FluentValidation.resources.dll
 C:\Developer\2015\CarRental\CarRentalDemo\Core.Common\bin\Debug\sv\FluentValidation.resources.dll
 C:\Developer\2015\CarRental\CarRentalDemo\Core.Common\bin\Debug\tr\FluentValidation.resources.dll
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common\bin\Debug\EntityFramework.dll
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common\bin\Debug\EntityFramework.xml
