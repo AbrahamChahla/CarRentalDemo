@@ -12,6 +12,7 @@ namespace CarRental.Business.Entities
     [DataContract]
     public class Account : EntityBase, IIdentifiableEntity
     {
+        [DataMember]
         public int AccountId { get; set; }
 
         public int EntityId
@@ -22,5 +23,23 @@ namespace CarRental.Business.Entities
             }
             set { AccountId = value; }
         }
+        [DataMember]
+        public string LoginEmail { get; set; }
+        [DataMember]
+        public string FirstName { get; set; }
+        [DataMember]
+        public string LastName { get; set; }
+        [DataMember]
+        public string Address { get; set; }
+        [DataMember]
+        public string City { get; set; }
+        [DataMember]
+        public string State { get; set; }
+        [DataMember]
+        public string ZipCode { get; set; }
+        [DataMember]
+        public string CreditCard { get; set; }
+        [DataMember]
+        public string ExpDate { get; set; }
     }
 }
