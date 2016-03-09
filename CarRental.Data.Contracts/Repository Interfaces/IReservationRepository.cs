@@ -10,7 +10,8 @@ namespace CarRental.Data.Contracts.Repository_Interfaces
 {
     public interface IReservationRepository : IDataRepository<Reservation>
     {
-        IEnumerable<CustomerReservationInfo> GetCurrentCustomerReservationInfo();
         IEnumerable<Reservation> GetReservationsByPickupDate(DateTime pickupDate);
+        //IEnumerable<CustomerReservationInfo> GetCurrentCustomerReservationInfo();
+        //IEnumerable<CustomerReservationInfo> GetCustomerOpenReservationInfo( int accountId);
     }
 }

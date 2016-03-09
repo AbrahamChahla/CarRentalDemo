@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CarRental.Business.Entities;
 using CarRental.Data;
 using CarRental.Data.Contracts.Repository_Interfaces;
+using Core.Common.Extensions;
 
 namespace CarRental.Data.Data_Repositories
 {
@@ -69,28 +70,31 @@ namespace CarRental.Data.Data_Repositories
         {
             using (CarRentalContext entityContext = new CarRentalContext())
             {
-                return entityContext.RentalSet
-                    .Where(e => e.AccountId == accountId)
-                    .Select(e => e).ToFullyLoaded();
-            }
-        }
-
-        public IEnumerable<CustomerRentalInfo> GetCurrentCustomerInfo()
-        {
-            using (CarRentalContext entityContext = new CarRentalContext())
-            {
-                var query = from r in entityContext.RentalSet
-                    where r.DateReturned == null
-                    join a in entityContext.AccountSet on r.AccountId equals a.AccountId
-                    join c in entityContext.CarSet on r.CarId equals c.CarId
-                    select new CustomerRentalInfo()
-                    {
-                        Customer = a,
-                        Car = c,
-                    };
+                var query = from e in entityContext.RentalSet
+                    where e.AccountId == accountId
+                    select e;
 
                 return query.ToFullyLoaded();
             }
         }
+
+        //public IEnumerable<CustomerRentalInfo> GetCurrentCustomerInfo()
+        //{
+        //    using (CarRentalContext entityContext = new CarRentalContext())
+        //    {
+        //        var query = from r in entityContext.RentalSet
+        //            where r.DateReturned == null
+        //            join a in entityContext.AccountSet on r.AccountId equals a.AccountId
+        //            join c in entityContext.CarSet on r.CarId equals c.CarId
+        //            select new CustomerRentalInfo()
+        //            {
+        //                Customer = a,
+        //                Car = c,
+        //                Rental = r
+        //            };
+
+        //        return query.ToFullyLoaded();
+        //    }
+        //}
     }
 }
