@@ -80,14 +80,16 @@ namespace CarRental.Data.Data_Repositories
             using (CarRentalContext entityContext = new CarRentalContext())
             {
                 var query = from r in entityContext.RentalSet
-                            where r.DateReturned == null
-                            join a in entityContext.AccountSet on r.AccountId equals a.AccountId
-                            join c in entityContext.CarSet on r.CarId equals c.CarId
-                            select new CustomerRentalInfo()
-                            {
-                                Customer = a,
-                                Car = c,
-                            }
+                    where r.DateReturned == null
+                    join a in entityContext.AccountSet on r.AccountId equals a.AccountId
+                    join c in entityContext.CarSet on r.CarId equals c.CarId
+                    select new CustomerRentalInfo()
+                    {
+                        Customer = a,
+                        Car = c,
+                    };
+
+                return query.ToFullyLoaded();
             }
         }
     }
