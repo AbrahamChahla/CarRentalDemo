@@ -7,3 +7,4 @@ C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\bin\Debug\Core.C
 C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\bin\Debug\Core.Common.Contracts.pdb
 C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.dll
 C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.pdb
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.csprojResolveAssemblyReference.cache

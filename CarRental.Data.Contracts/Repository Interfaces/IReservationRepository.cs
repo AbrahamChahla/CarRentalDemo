@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CarRental.Business.Entities;
+using CarRental.Data.Contracts.DTOs;
 using Core.Common.Contracts;
 
 namespace CarRental.Data.Contracts.Repository_Interfaces
@@ -11,7 +12,7 @@ namespace CarRental.Data.Contracts.Repository_Interfaces
     public interface IReservationRepository : IDataRepository<Reservation>
     {
         IEnumerable<Reservation> GetReservationsByPickupDate(DateTime pickupDate);
-        //IEnumerable<CustomerReservationInfo> GetCurrentCustomerReservationInfo();
-        //IEnumerable<CustomerReservationInfo> GetCustomerOpenReservationInfo( int accountId);
+        IEnumerable<CustomerReservationInfo> GetCurrentCustomerReservationInfo();
+        IEnumerable<CustomerReservationInfo> GetCustomerOpenReservationInfo(int accountId);
     }
 }
