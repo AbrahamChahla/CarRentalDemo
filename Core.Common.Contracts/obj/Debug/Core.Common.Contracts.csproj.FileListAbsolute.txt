@@ -3,3 +3,8 @@ C:\Developer\gitroot\CarRental\Core.Common.Contracts\bin\Debug\Core.Common.Contr
 C:\Developer\gitroot\CarRental\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.dll
 C:\Developer\gitroot\CarRental\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.pdb
 C:\Developer\gitroot\CarRental\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.csprojResolveAssemblyReference.cache
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\bin\Debug\Core.Common.Contracts.dll
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\bin\Debug\Core.Common.Contracts.pdb
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.csprojResolveAssemblyReference.cache
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.dll
+C:\Developer\2015\CarRental\CarRentalDemo\Core.Common.Contracts\obj\Debug\Core.Common.Contracts.pdb

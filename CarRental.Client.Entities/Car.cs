@@ -116,9 +116,9 @@ namespace CarRental.Client.Entities
                 RuleFor(val => val.Year).GreaterThan(2000).LessThanOrEqualTo(DateTime.Now.Year);
             }
         }
-        protected override IValidator GetValidator()
-        {
-            return new CarValidator();
-        }
+        //protected override IValidator GetValidator()
+        //{
+        //    return new CarValidator();
+        //}
     }
 }

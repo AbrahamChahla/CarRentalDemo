@@ -45,7 +45,7 @@ namespace Core.Common.Core
         }
         protected virtual void OnPropertyChanged(string propertyName, bool makeDirty)
         {
-            base.OnPropertyChanged(propertyName);
+           // base.OnPropertyChanged(propertyName);
             if (makeDirty)
             {
                 IsDirty = true;
@@ -94,31 +94,31 @@ namespace Core.Common.Core
 
         }
 
-        string IDataErrorInfo.Error
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
-        string IDataErrorInfo.this[string columName]
-        {
-            get
-            {
-                StringBuilder errors = new StringBuilder();
-                if (_ValidationErrors != null && _ValidationErrors.Count() > 0)
-                {
-                    foreach (ValidationFailure validationError in _ValidationErrors)
-                    {
-                        if (validationError.PropertyName == columName)
-                        {
-                            errors.AppendLine(validationError.ErrorMessage);
-                        }
-                    }
-                }
-                return errors.ToString();
-            }
-        }
+        //string IDataErrorInfo.Error
+        //{
+        //    get
+        //    {
+        //        return string.Empty;
+        //    }
+        //}
+        //string IDataErrorInfo.this[string columName]
+        //{
+        //    get
+        //    {
+        //        StringBuilder errors = new StringBuilder();
+        //        if (_ValidationErrors != null && _ValidationErrors.Count() > 0)
+        //        {
+        //            foreach (ValidationFailure validationError in _ValidationErrors)
+        //            {
+        //                if (validationError.PropertyName == columName)
+        //                {
+        //                    errors.AppendLine(validationError.ErrorMessage);
+        //                }
+        //            }
+        //        }
+        //        return errors.ToString();
+        //    }
+        //}
 
         [NotNavigable]
         public bool IsDirty

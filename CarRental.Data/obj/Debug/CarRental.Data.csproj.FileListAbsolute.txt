@@ -3,3 +3,8 @@ C:\Developer\gitroot\CarRental\CarRental.Data\bin\Debug\CarRental.Data.pdb
 C:\Developer\gitroot\CarRental\CarRental.Data\obj\Debug\CarRental.Data.dll
 C:\Developer\gitroot\CarRental\CarRental.Data\obj\Debug\CarRental.Data.pdb
 C:\Developer\gitroot\CarRental\CarRental.Data\obj\Debug\CarRental.Data.csprojResolveAssemblyReference.cache
+C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Data\bin\Debug\CarRental.Data.dll
+C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Data\bin\Debug\CarRental.Data.pdb
+C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Data\obj\Debug\CarRental.Data.csprojResolveAssemblyReference.cache
+C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Data\obj\Debug\CarRental.Data.dll
+C:\Developer\2015\CarRental\CarRentalDemo\CarRental.Data\obj\Debug\CarRental.Data.pdb
