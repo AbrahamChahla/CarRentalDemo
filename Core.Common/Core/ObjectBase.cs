@@ -16,9 +16,9 @@ using FluentValidation.Results;
 
 namespace Core.Common.Core
 {
-    public abstract class ObjectBase : NotificationObject, IDirtyCapable, IExtensibleDataObject
+    public abstract class ObjectBase : NotificationObject, IDirtyCapable, IExtensibleDataObject, IDataErrorInfo
     {
-        public ObjectBase()
+        protected ObjectBase()
         {
             _Validator = GetValidator();
             Validate();
@@ -28,114 +28,53 @@ namespace Core.Common.Core
         protected IValidator _Validator = null;
 
         protected IEnumerable<ValidationFailure> _ValidationErrors = null;
+
         public static CompositionContainer Container { get; set; }
 
+
+        
         #region IExtensibleDataObject Members
         public ExtensionDataObject ExtensionData { get; set; }
         #endregion
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        #region IDirtyCapable members
+
+        [NotNavigable]
+        public virtual bool IsDirty
         {
-            OnPropertyChanged(propertyName, true);
-        }
-        protected virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
-        {
-            string propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
-            OnPropertyChanged(propertyName);
-        }
-        protected virtual void OnPropertyChanged(string propertyName, bool makeDirty)
-        {
-            base.OnPropertyChanged(propertyName);
-            if (makeDirty)
+            get { return _IsDirty; }
+            protected set
             {
-                IsDirty = true;
+                _IsDirty = value;
+                OnPropertyChanged("IsDirty", false);
             }
-            Validate();
         }
 
-        public virtual IValidator GetValidator()
+        public virtual bool IsAnythingDirty()
         {
-            return null;
-        }
-        [NotNavigable]
-        public IEnumerable<ValidationFailure> ValidationErrors
-        {
-            get
-            {
-                return _ValidationErrors;
-            }
-            set
-            {
+            bool IsDirty = false;
 
-            }
-        }
-        public void Validate()
-        {
-            if (_Validator != null)
+            WalkObjectGraph(o =>
             {
-                ValidationResult results = _Validator.Validate(this);
-                _ValidationErrors = results.Errors;
-            }
-        }
-        [NotNavigable]
-        public virtual bool IsValid
-        {
-            get
-            {
-                if (_ValidationErrors != null && _ValidationErrors.Count() > 0)
+                if (o.IsDirty)
                 {
-                    return false;
+                    IsDirty = true;
+                    return true; //short circuit
                 }
                 else
                 {
-                    return true;
+                    return false;
+
                 }
-            }
+            }, coll => { });
+            return IsDirty;
+        }
+        public List<IDirtyCapable> GetDirtyObjects()
+        {
+            List<IDirtyCapable> dirtyObjects = new List<IDirtyCapable>();
 
-        }
 
-        string IDataErrorInfo.Error
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
-        string IDataErrorInfo.this[string columName]
-        {
-            get
-            {
-                StringBuilder errors = new StringBuilder();
-                if (_ValidationErrors != null && _ValidationErrors.Count() > 0)
-                {
-                    foreach (ValidationFailure validationError in _ValidationErrors)
-                    {
-                        if (validationError.PropertyName == columName)
-                        {
-                            errors.AppendLine(validationError.ErrorMessage);
-                        }
-                    }
-                }
-                return errors.ToString();
-            }
-        }
-
-        [NotNavigable]
-        public bool IsDirty
-        {
-            get
-            {
-                return _IsDirty;
-            }
-            set
-            {
-                _IsDirty = value;
-            }
-        }
-        public List<ObjectBase> GetDirtyObjects()
-        {
-            List<ObjectBase> dirtyObjects = new List<ObjectBase>();
-            WalObjectGraph(o =>
+            WalkObjectGraph(o =>
             {
                 if (o.IsDirty)
                 {
@@ -146,10 +85,13 @@ namespace Core.Common.Core
 
             return dirtyObjects;
         }
+        /// <summary>
+        /// Walks the object graph cleaning any dirty object.
+        /// </summary>
         public void CleanAll()
         {
 
-            WalObjectGraph(o =>
+            WalkObjectGraph(o =>
             {
                 if (o.IsDirty)
                 {
@@ -158,29 +100,45 @@ namespace Core.Common.Core
                 return false;
             }, coll => { });
         }
-        public virtual bool IsAnythingDirty()
+
+        #endregion
+        
+        #region Property change notification
+        protected override void OnPropertyChanged(string propertyName)
         {
-            bool IsDirty = false;
-
-            WalObjectGraph(o =>
-            {
-                if (o.IsDirty)
-                {
-                    IsDirty = true;
-                    return true;
-                }
-                else
-                {
-                    return false;
-
-                }
-            }, coll => { });
-            return IsDirty;
+            OnPropertyChanged(propertyName, true);
         }
-        protected void WalObjectGraph(Func<ObjectBase, bool> snippetForObject, Action<IList> snippetForCollection, params string[] exemptProperties)
+        protected void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression, bool makeDirty)
+        {
+            string propertyName = PropertySupport.ExtractPropertyName(propertyExpression);
+            OnPropertyChanged(propertyName, makeDirty);
+
+        }
+        protected void OnPropertyChanged(string propertyName, bool makeDirty)
+        {
+            base.OnPropertyChanged(propertyName);
+            if (makeDirty)
+            {
+                IsDirty = true;
+            }
+            Validate();
+        }
+
+
+        #endregion
+        
+        #region Protected methods
+        /// <summary>
+        /// Method that walk throught an object and check if is dirty.
+        /// </summary>
+        /// <param name="snippetForObject"></param>
+        /// <param name="snippetForCollection"></param>
+        /// <param name="exemptProperties"></param>
+        protected void WalkObjectGraph(Func<ObjectBase, bool> snippetForObject, Action<IList> snippetForCollection, params string[] exemptProperties)
         {
             List<ObjectBase> visited = new List<ObjectBase>();
             Action<ObjectBase> walk = null;
+
             List<string> exemptions = new List<string>();
             if (exemptProperties != null)
             {
@@ -232,8 +190,84 @@ namespace Core.Common.Core
         }
 
 
+        #endregion
+
+        #region Validation
+
+        public virtual IValidator GetValidator()
+        {
+            return null;
+        }
+
+        [NotNavigable]
+        public IEnumerable<ValidationFailure> ValidationErrors
+        {
+            get
+            {
+                return _ValidationErrors;
+            }
+            set
+            {
+
+            }
+        }
 
 
+        public void Validate()
+        {
+            if (_Validator != null)
+            {
+                ValidationResult results = _Validator.Validate(this);
+                _ValidationErrors = results.Errors;
+            }
+        }
+
+        [NotNavigable]
+        public virtual bool IsValid
+        {
+            get
+            {
+                if (_ValidationErrors != null && _ValidationErrors.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+        }
+
+
+        #endregion
+
+        #region  IDataErrorInfo members
+        string IDataErrorInfo.Error
+        {
+            get { return string.Empty; }
+        }
+        string IDataErrorInfo.this[string columName]
+        {
+            get
+            {
+                StringBuilder errors = new StringBuilder();
+                if (_ValidationErrors != null && _ValidationErrors.Any())
+                {
+                    foreach (ValidationFailure validationError in _ValidationErrors)
+                    {
+                        if (validationError.PropertyName == columName)
+                        {
+                            errors.AppendLine(validationError.ErrorMessage);
+                        }
+                    }
+                }
+                return errors.ToString();
+            }
+        }
+
+
+        #endregion
 
     }
 }
