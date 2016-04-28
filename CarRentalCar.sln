@@ -38,6 +38,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.Data.Tests", "Car
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.Business.Bootstrapper", "CarRental.Business.Bootstrapper\CarRental.Business.Bootstrapper.csproj", "{F3E4A6CA-E016-457E-AF37-C08767584548}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{36205E1B-FA55-4D80-BA09-780188FE9158}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
