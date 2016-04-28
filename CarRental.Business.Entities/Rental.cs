@@ -17,7 +17,7 @@ namespace CarRental.Business.Entities
         [DataMember]
         public int AccountId { get; set; }
         [DataMember]
-        public int CardId { get; set; }
+        public int CarId { get; set; }
         [DataMember]
         public DateTime DateRented { get; set; }
         [DataMember]
